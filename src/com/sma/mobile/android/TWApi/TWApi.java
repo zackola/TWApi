@@ -27,32 +27,38 @@ public class TWApi {
 		mCredentials.put("password", password);
 	}
 
-	private static JSONArray doApiRequestArray(String base, String action,
+	private String doApiRequest(String base, String action,
+			boolean authRequired, HttpVerbs method,
+			Map<String, String> credentials, Map<String, String> data) {
+		String response = null;
+		HttpRequest request = new HttpRequest();
+		response = request.doRequest(String.format("%s://%s/%s.json",
+				(authRequired) ? HttpProtocols.http.toString()
+						: HttpProtocols.http.toString(), base, action), method,
+				authRequired, credentials, data);
+		return response;
+	}
+
+	private JSONArray doApiRequestArray(String base, String action,
 			boolean authRequired, HttpVerbs method,
 			Map<String, String> credentials, Map<String, String> data) {
 		JSONArray response = null;
 		try {
-			HttpRequest request = new HttpRequest();
-			response = new JSONArray(request.doRequest(String.format(
-					"%s://%s/%s.json", (authRequired) ? HttpProtocols.http
-							.toString() : HttpProtocols.http.toString(), base,
-					action), method, authRequired, credentials, data));
+			response = new JSONArray(doApiRequest(base, action, authRequired,
+					method, credentials, data));
 		} catch (JSONException e) {
 			Log.e(TAG, e.toString());
 		}
 		return response;
 	}
 
-	private static JSONObject doApiRequestObject(String base, String action,
+	private JSONObject doApiRequestObject(String base, String action,
 			boolean authRequired, HttpVerbs method,
 			Map<String, String> credentials, Map<String, String> data) {
 		JSONObject response = null;
 		try {
-			HttpRequest request = new HttpRequest();
-			response = new JSONObject(request.doRequest(String.format(
-					"%s://%s/%s.json", (authRequired) ? HttpProtocols.http
-							.toString() : HttpProtocols.http.toString(), base,
-					action), method, authRequired, credentials, data));
+			response = new JSONObject(doApiRequest(base, action, authRequired,
+					method, credentials, data));
 		} catch (JSONException e) {
 			Log.e(TAG, e.toString());
 		}
@@ -118,8 +124,8 @@ public class TWApi {
 	}
 
 	// Help methods
-	
-	public static JSONObject test() {
+
+	public JSONObject test() {
 		String action = "help/test";
 		return doApiRequestObject(REST_BASE, action, false, HttpVerbs.GET,
 				null, null);
