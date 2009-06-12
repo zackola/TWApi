@@ -1,6 +1,5 @@
 package com.sma.mobile.android.TWApi;
 
-
 public class HttpUtils {
 
 	public static enum HttpVerbs {

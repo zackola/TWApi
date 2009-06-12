@@ -16,7 +16,7 @@ import com.sma.mobile.android.TWApi.HttpUtils.HttpVerbs;
 
 public class HttpRequest {
 
-	StringBuilder sb = null;
+	StringBuilder sb;
 
 	public HttpRequest() {
 		sb = new StringBuilder();
